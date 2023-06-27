@@ -32,8 +32,6 @@ export default function App() {
     ]
   )
 
-
-  console.log(todos, currentTodo)
   return (
     <>
       <Form func={addTodo} func2={getInputValue} />
