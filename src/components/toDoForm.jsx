@@ -1,7 +1,7 @@
-export default function Form({func, func2}) {
+export default function Form({addTodo, getInputValue}) {
   return (
-    <form onSubmit={func}>
-      <input type="text" id="todo-input" placeholder="ჩაწერე რისი გაკეთება გსურს ..." onChange={func2}/>
+    <form onSubmit={addTodo}>
+      <input type="text" id="todo-input" placeholder="ჩაწერე რისი გაკეთება გსურს ..." onChange={getInputValue}/>
       <button>დამატება</button>
     </form>
   )

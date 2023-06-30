@@ -1,12 +1,13 @@
 import "./App.css";
-import React, { useState } from "react";
+import { useState} from "react";
 import Form from "./components/toDoForm";
 import List from "./components/toDoList";
 
 export default function App() {
   const [todos, setTodos] = useState([])
   const [currentTodo, setCurrent] = useState([])
-  const getInputValue = (e) => {setCurrent(e.target.value)}
+
+  const getInputValue = (e) => setCurrent(e.target.value)
 
   const addTodo = (e) => {
     e.preventDefault()
@@ -15,7 +16,7 @@ export default function App() {
       setTodos([
       ...todos,
       {
-        todo: document.querySelector("#todo-input").value,
+        todo: currentTodo,
         id: crypto.randomUUID(),
         status: true,
       }
@@ -31,25 +32,21 @@ export default function App() {
       {todo:todo, id:id, status:!status}
     ]
   )
-
+  const data = [todos, moveTodo, removeTodo]
   return (
     <>
-      <Form func={addTodo} func2={getInputValue} />
+      <Form addTodo={addTodo} getInputValue={getInputValue}/>
       <div className="tasksbox">
         <List 
-          arr={todos} 
-          moveTodo={moveTodo} 
-          removeTodo={removeTodo} 
+          data={data}
           status={true}
           currentTodo={currentTodo}
           />
         <List
-          arr={todos}
-          moveTodo={moveTodo}
-          removeTodo={removeTodo}
+          data={data}
           status={false}
         />
       </div>
     </>
-  );
+  )
 }
