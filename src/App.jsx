@@ -1,49 +1,59 @@
 import "./App.css";
-import { useState} from "react";
+import { useState, useMemo} from "react";
 import Form from "./components/toDoForm";
 import List from "./components/toDoList";
 
 export default function App() {
-  const [todos, setTodos] = useState([])
-  const [currentTodo, setCurrent] = useState([])
 
-  const getInputValue = (e) => setCurrent(e.target.value)
+  const [currentTodos, setCurrentTodos] = useState([])
+  const [doneTodos, setDoneTodos] = useState([])
+
+  const [currentTodo, setCurrentTodo] = useState('')
+
+  const getInputValue = (e) => setCurrentTodo(e.target.value)
 
   const addTodo = (e) => {
     e.preventDefault()
-    const todoValue = document.querySelector("#todo-input").value
-    if(todoValue!==''){
-      setTodos([
-      ...todos,
+    if(currentTodo.trim() !== ''){
+      setCurrentTodos((prevCurrentTodos) => [
+        ...prevCurrentTodos,
       {
         todo: currentTodo,
         id: crypto.randomUUID(),
         status: true,
       }
     ])
-    setCurrent()
-    document.querySelector("#todo-input").value = ''
+    setCurrentTodo('')
     }
   }
-  const removeTodo = (id) => setTodos([...todos.filter((x) => x.id !== id)])
-  const moveTodo = (todo, id, status) => setTodos(
-    [
-      ...(todos.filter((x) => x.id !== id)),
-      {todo:todo, id:id, status:!status}
-    ]
-  )
-  const data = [todos, moveTodo, removeTodo]
+ 
+  const removeTodo = (id) => setDoneTodos((prevDoneTodos) => prevDoneTodos.filter((todo) => todo.id !== id))
+  
+  const moveTodo = (todo, id, status) => {
+    const movedTodo = {todo, id, status: !status}
+    if (status) {
+      setCurrentTodos((prevCurrentTodos) => prevCurrentTodos.filter(x => x.id !== id))
+      setDoneTodos((prevDoneTodos) => [...prevDoneTodos, movedTodo])
+    } else {
+      setDoneTodos((prevDoneTodos) => prevDoneTodos.filter(x => x.id !== id))
+      setCurrentTodos((prevCurrentTodos) => [...prevCurrentTodos, movedTodo])
+    }
+  }
+
+  const currentData = useMemo(() => [currentTodos, moveTodo, removeTodo], [currentTodos])
+  const doneData = useMemo(() => [doneTodos, moveTodo, removeTodo], [doneTodos])
+
   return (
     <>
-      <Form addTodo={addTodo} getInputValue={getInputValue}/>
+      <Form addTodo={addTodo} getInputValue={getInputValue} currentTodo={currentTodo}/>
       <div className="tasksbox">
         <List 
-          data={data}
+          data={currentData}
           status={true}
           currentTodo={currentTodo}
           />
         <List
-          data={data}
+          data={doneData}
           status={false}
         />
       </div>

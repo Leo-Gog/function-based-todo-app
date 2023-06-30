@@ -4,7 +4,7 @@ export default function List({data:[todos, moveTodo, removeTodo], status, curren
     <div>
         <p><span className="head">{status ? "მიმდინარე:" : "შესრულებული:"}</span></p>
         <ul>
-            {todos.filter(x => x.status === status).map((value) => 
+            {todos.map((value) => 
                 <Todo value={value} moveTodo={moveTodo} key={value.id} removeTodo={removeTodo}/>
             )}
             {(status && currentTodo !== undefined && currentTodo.length >= 1) && <li>{currentTodo}</li>}
